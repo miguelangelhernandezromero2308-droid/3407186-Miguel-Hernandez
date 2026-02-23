@@ -3,91 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- TODO: Cambia el título según tu dominio -->
-  <title>Gestor de Colección | Tu Dominio</title>
+  <title>Gestor de Pacientes | Clínica</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <!--
-      ============================================
-      NOTA PARA EL APRENDIZ:
-      ============================================
-      Este HTML es una plantilla genérica.
-      Debes adaptarlo a tu dominio asignado:
-
-      1. Cambia todos los textos de "Elemento" a tu entidad
-      2. Cambia las categorías por las de tu dominio
-      3. Agrega campos adicionales si tu dominio lo requiere
-      4. Cambia emojis para que sean coherentes con tu dominio
-
-      EJEMPLO (Planetario - NO es un dominio asignable):
-      - "Elementos" → "Cuerpos Celestes"
-      - Categorías: Planeta, Estrella, Asteroide, etc.
-      ============================================
-    -->
 
     <!-- Header -->
     <header class="header">
-      <!-- TODO: Cambia el título y emoji según tu dominio -->
-      <h1>📦 Gestor de Colección</h1>
-      <p class="subtitle">Adaptado a tu dominio asignado</p>
-      <div class="stats-summary" id="stats-summary">
+      <h1>🏥 Gestor de Pacientes</h1>
+      <p class="subtitle">Sistema de seguimiento clínico</p>
+      <div class="stats-summary">
         <span class="stat">Total: <strong id="stat-total">0</strong></span>
-        <!-- TODO: Cambia "Activos/Inactivos" por términos de tu dominio -->
-        <span class="stat">Activos: <strong id="stat-active">0</strong></span>
-        <span class="stat">Inactivos: <strong id="stat-inactive">0</strong></span>
+        <span class="stat">En seguimiento: <strong id="stat-active">0</strong></span>
+        <span class="stat">Dados de alta: <strong id="stat-inactive">0</strong></span>
       </div>
     </header>
 
-    <!-- Item Form -->
+    <!-- Formulario -->
     <section class="form-section">
-      <!-- TODO: Cambia "Elemento" por tu entidad -->
-      <h2 id="form-title">➕ Nuevo Elemento</h2>
+      <h2 id="form-title">➕ Nuevo Paciente</h2>
+
       <form id="item-form" class="item-form">
-        <input type="hidden" id="item-id" value="">
+        <input type="hidden" id="item-id">
 
         <div class="form-group">
-          <!-- TODO: Cambia el label y placeholder -->
-          <label for="item-name">Nombre *</label>
+          <label for="item-name">Nombre del Paciente *</label>
           <input
             type="text"
             id="item-name"
-            placeholder="Nombre del elemento"
+            placeholder="Ej: Juan Pérez"
             required
           >
         </div>
 
         <div class="form-group">
-          <label for="item-description">Descripción</label>
+          <label for="item-description">Observaciones Clínicas</label>
           <textarea
             id="item-description"
             rows="3"
-            placeholder="Detalles adicionales (opcional)"
+            placeholder="Motivo de consulta, diagnóstico, notas..."
           ></textarea>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <!-- TODO: Cambia las categorías según tu dominio -->
-            <label for="item-category">Categoría</label>
+            <label for="item-category">Especialidad</label>
             <select id="item-category">
-              <!--
-                EJEMPLO Planetario:
-                <option value="planet">🪐 Planeta</option>
-                <option value="star">⭐ Estrella</option>
-                <option value="asteroid">☄️ Asteroide</option>
-              -->
-              <option value="category1">🔹 Categoría 1</option>
-              <option value="category2">🔸 Categoría 2</option>
-              <option value="category3">🔷 Categoría 3</option>
-              <option value="other">📌 Otro</option>
+              <option value="category1">🩺 Medicina General</option>
+              <option value="category2">👶 Pediatría</option>
+              <option value="category3">🦷 Odontología</option>
+              <option value="other">📌 Otra Especialidad</option>
             </select>
           </div>
 
           <div class="form-group">
-            <!-- TODO: Opcionalmente renombra "Prioridad" según tu dominio -->
-            <label for="item-priority">Prioridad/Nivel</label>
+            <label for="item-priority">Nivel de Urgencia</label>
             <select id="item-priority">
               <option value="low">🟢 Baja</option>
               <option value="medium" selected>🟡 Media</option>
@@ -96,18 +67,9 @@
           </div>
         </div>
 
-        <!--
-          TODO: Agrega campos adicionales específicos de tu dominio
-          EJEMPLO Planetario:
-          <div class="form-group">
-            <label for="item-magnitude">Magnitud</label>
-            <input type="number" id="item-magnitude" step="0.1">
-          </div>
-        -->
-
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="submit-btn">
-            Crear
+            Registrar
           </button>
           <button type="button" class="btn btn-secondary" id="cancel-btn" style="display: none;">
             Cancelar
@@ -116,33 +78,32 @@
       </form>
     </section>
 
-    <!-- Filters & Search -->
+    <!-- Filtros -->
     <section class="filters-section">
       <div class="filters">
+
         <div class="filter-group">
           <label for="filter-status">Estado:</label>
           <select id="filter-status">
             <option value="all">Todos</option>
-            <!-- TODO: Cambia los términos según tu dominio -->
-            <option value="active">Activos</option>
-            <option value="inactive">Inactivos</option>
+            <option value="active">En seguimiento</option>
+            <option value="inactive">Dados de alta</option>
           </select>
         </div>
 
         <div class="filter-group">
-          <label for="filter-category">Categoría:</label>
+          <label for="filter-category">Especialidad:</label>
           <select id="filter-category">
             <option value="all">Todas</option>
-            <!-- TODO: Repite las mismas categorías del formulario -->
-            <option value="category1">Categoría 1</option>
-            <option value="category2">Categoría 2</option>
-            <option value="category3">Categoría 3</option>
-            <option value="other">Otro</option>
+            <option value="category1">Medicina General</option>
+            <option value="category2">Pediatría</option>
+            <option value="category3">Odontología</option>
+            <option value="other">Otra</option>
           </select>
         </div>
 
         <div class="filter-group">
-          <label for="filter-priority">Prioridad:</label>
+          <label for="filter-priority">Urgencia:</label>
           <select id="filter-priority">
             <option value="all">Todas</option>
             <option value="high">Alta</option>
@@ -156,42 +117,38 @@
           <input
             type="text"
             id="search-input"
-            placeholder="Buscar elementos..."
+            placeholder="Buscar paciente..."
           >
         </div>
+
       </div>
     </section>
 
-    <!-- Item List -->
+    <!-- Lista -->
     <section class="items-section">
       <div class="items-header">
-        <!-- TODO: Cambia el título -->
-        <h2>📝 Lista de Elementos</h2>
+        <h2>📋 Lista de Pacientes</h2>
         <button class="btn btn-outline" id="clear-inactive">
-          🗑️ Limpiar Inactivos
+          🗑️ Eliminar dados de alta
         </button>
       </div>
 
-      <div id="item-list" class="item-list">
-        <!-- Los elementos se renderizarán aquí con JavaScript -->
-      </div>
+      <div id="item-list" class="item-list"></div>
 
       <div id="empty-state" class="empty-state">
-        <p>📭 No hay elementos que mostrar</p>
-        <p class="empty-state-hint">Crea tu primer elemento usando el formulario arriba</p>
+        <p>📭 No hay pacientes registrados</p>
+        <p class="empty-state-hint">Registra tu primer paciente usando el formulario</p>
       </div>
     </section>
 
-    <!-- Detailed Stats -->
+    <!-- Estadísticas -->
     <section class="detailed-stats">
-      <h3>📊 Estadísticas Detalladas</h3>
-      <div id="stats-details" class="stats-grid">
-        <!-- Las estadísticas se renderizarán aquí con JavaScript -->
-      </div>
+      <h3>📊 Estadísticas por Especialidad</h3>
+      <div id="stats-details" class="stats-grid"></div>
     </section>
+
   </div>
 
-  <!-- Script principal -->
   <script src="starter/script.js"></script>
 </body>
 </html>

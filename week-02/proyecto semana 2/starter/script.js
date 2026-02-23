@@ -6,34 +6,31 @@ let items = [];
 let editingItemId = null;
 
 // ============================================
-// CATEGORÍAS - DOMINIO MÉDICO
+// CATEGORÍAS (COMPATIBLES CON EL HTML)
 // ============================================
 
 const CATEGORIES = {
-  general: { name: 'Medicina General', emoji: '🩺' },
-  pediatrics: { name: 'Pediatría', emoji: '👶' },
-  dentistry: { name: 'Odontología', emoji: '🦷' },
-  psychology: { name: 'Psicología', emoji: '🧠' },
+  category1: { name: 'Categoría 1', emoji: '🔹' },
+  category2: { name: 'Categoría 2', emoji: '🔸' },
+  category3: { name: 'Categoría 3', emoji: '🔷' },
   other: { name: 'Otro', emoji: '📌' }
 };
 
 const PRIORITIES = {
-  high: { name: 'Alta', color: '#ef4444' },
-  medium: { name: 'Media', color: '#f59e0b' },
-  low: { name: 'Baja', color: '#22c55e' }
+  high: { name: 'Alta' },
+  medium: { name: 'Media' },
+  low: { name: 'Baja' }
 };
 
 // ============================================
 // PERSISTENCIA
 // ============================================
 
-const loadItems = () => {
-  return JSON.parse(localStorage.getItem('medicalAppointments') ?? '[]');
-};
+const loadItems = () =>
+  JSON.parse(localStorage.getItem('collectionItems') ?? '[]');
 
-const saveItems = itemsToSave => {
-  localStorage.setItem('medicalAppointments', JSON.stringify(itemsToSave));
-};
+const saveItems = itemsToSave =>
+  localStorage.setItem('collectionItems', JSON.stringify(itemsToSave));
 
 // ============================================
 // CRUD
@@ -44,7 +41,7 @@ const createItem = (itemData = {}) => {
     id: Date.now(),
     name: itemData.name ?? '',
     description: itemData.description ?? '',
-    category: itemData.category ?? 'general',
+    category: itemData.category ?? 'category1',
     priority: itemData.priority ?? 'medium',
     active: true,
     createdAt: new Date().toISOString(),
@@ -52,9 +49,7 @@ const createItem = (itemData = {}) => {
   };
 
   const newItems = [...items, newItem];
-
   saveItems(newItems);
-
   return newItems;
 };
 
@@ -66,35 +61,29 @@ const updateItem = (id, updates) => {
   );
 
   saveItems(updatedItems);
-
   return updatedItems;
 };
 
 const deleteItem = id => {
-  const filteredItems = items.filter(item => item.id !== id);
-
-  saveItems(filteredItems);
-
-  return filteredItems;
+  const filtered = items.filter(item => item.id !== id);
+  saveItems(filtered);
+  return filtered;
 };
 
 const toggleItemActive = id => {
-  const updatedItems = items.map(item =>
+  const updated = items.map(item =>
     item.id === id
-      ? { ...item, active: !item.active, updatedAt: new Date().toISOString() }
+      ? { ...item, active: !item.active }
       : item
   );
 
-  saveItems(updatedItems);
-
-  return updatedItems;
+  saveItems(updated);
+  return updated;
 };
 
 const clearInactive = () => {
   const activeItems = items.filter(item => item.active);
-
   saveItems(activeItems);
-
   return activeItems;
 };
 
@@ -103,24 +92,20 @@ const clearInactive = () => {
 // ============================================
 
 const filterByStatus = (itemsToFilter, status = 'all') => {
-  if (status === 'all') return itemsToFilter;
   if (status === 'active') return itemsToFilter.filter(i => i.active);
   if (status === 'inactive') return itemsToFilter.filter(i => !i.active);
-
   return itemsToFilter;
 };
 
-const filterByCategory = (itemsToFilter, category = 'all') => {
-  if (category === 'all') return itemsToFilter;
+const filterByCategory = (itemsToFilter, category = 'all') =>
+  category === 'all'
+    ? itemsToFilter
+    : itemsToFilter.filter(i => i.category === category);
 
-  return itemsToFilter.filter(i => i.category === category);
-};
-
-const filterByPriority = (itemsToFilter, priority = 'all') => {
-  if (priority === 'all') return itemsToFilter;
-
-  return itemsToFilter.filter(i => i.priority === priority);
-};
+const filterByPriority = (itemsToFilter, priority = 'all') =>
+  priority === 'all'
+    ? itemsToFilter
+    : itemsToFilter.filter(i => i.priority === priority);
 
 const searchItems = (itemsToFilter, query = '') => {
   if (!query.trim()) return itemsToFilter;
@@ -129,24 +114,23 @@ const searchItems = (itemsToFilter, query = '') => {
 
   return itemsToFilter.filter(item =>
     item.name.toLowerCase().includes(term) ||
-    (item.description ?? '').toLowerCase().includes(term)
+    item.description.toLowerCase().includes(term)
   );
 };
 
 const applyFilters = (itemsToFilter, filters = {}) => {
-  const {
-    status = 'all',
-    category = 'all',
-    priority = 'all',
-    search = ''
-  } = filters;
+  const { status, category, priority, search } = filters;
 
-  let result = filterByStatus(itemsToFilter, status);
-  result = filterByCategory(result, category);
-  result = filterByPriority(result, priority);
-  result = searchItems(result, search);
-
-  return result;
+  return searchItems(
+    filterByPriority(
+      filterByCategory(
+        filterByStatus(itemsToFilter, status),
+        category
+      ),
+      priority
+    ),
+    search
+  );
 };
 
 // ============================================
@@ -163,54 +147,45 @@ const getStats = (itemsToAnalyze = []) => {
     return acc;
   }, {});
 
-  const byPriority = itemsToAnalyze.reduce((acc, item) => {
-    acc[item.priority] = (acc[item.priority] ?? 0) + 1;
-    return acc;
-  }, {});
-
-  return { total, active, inactive, byCategory, byPriority };
+  return { total, active, inactive, byCategory };
 };
 
 // ============================================
 // RENDER
 // ============================================
 
-const getCategoryEmoji = category => {
-  return CATEGORIES[category]?.emoji ?? '📌';
-};
-
-const formatDate = dateString => {
-  return new Date(dateString).toLocaleDateString('es-ES');
-};
+const formatDate = date =>
+  new Date(date).toLocaleDateString('es-CO');
 
 const renderItem = item => {
-  const { id, name, description, category, priority, active, createdAt } = item;
+  const categoryData = CATEGORIES[item.category] ?? {
+    name: 'Sin categoría',
+    emoji: '📌'
+  };
+
+  const priorityData = PRIORITIES[item.priority] ?? {
+    name: 'Media'
+  };
 
   return `
-  <div class="task-item ${!active ? 'completed' : ''} priority-${priority}" data-item-id="${id}">
-    
-    <input 
-      type="checkbox" 
-      class="task-checkbox" 
-      ${active ? 'checked' : ''}
-    >
+  <div class="task-item ${!item.active ? 'completed' : ''} priority-${item.priority}" data-item-id="${item.id}">
+    <input type="checkbox" class="task-checkbox" ${item.active ? 'checked' : ''}>
 
     <div class="task-content">
-      <h3>${name}</h3>
-
-      ${description ? `<p>${description}</p>` : ''}
+      <h3>${item.name}</h3>
+      ${item.description ? `<p>${item.description}</p>` : ''}
 
       <div class="task-meta">
         <span class="task-badge badge-category">
-          ${getCategoryEmoji(category)} ${CATEGORIES[category]?.name}
+          ${categoryData.emoji} ${categoryData.name}
         </span>
 
-        <span class="task-badge badge-priority priority-${priority}">
-          ${PRIORITIES[priority]?.name}
+        <span class="task-badge badge-priority priority-${item.priority}">
+          ${priorityData.name}
         </span>
 
         <span class="task-date">
-          📅 ${formatDate(createdAt)}
+          📅 ${formatDate(item.createdAt)}
         </span>
       </div>
     </div>
@@ -227,16 +202,14 @@ const renderItems = itemsToRender => {
   const list = document.getElementById('item-list');
   const empty = document.getElementById('empty-state');
 
-  if (itemsToRender.length === 0) {
+  if (!itemsToRender.length) {
     list.innerHTML = '';
     empty.style.display = 'block';
-  } else {
-    empty.style.display = 'none';
-
-    list.innerHTML = itemsToRender
-      .map(renderItem)
-      .join('');
+    return;
   }
+
+  empty.style.display = 'none';
+  list.innerHTML = itemsToRender.map(renderItem).join('');
 };
 
 const renderStats = stats => {
@@ -244,153 +217,99 @@ const renderStats = stats => {
   document.getElementById('stat-active').textContent = stats.active;
   document.getElementById('stat-inactive').textContent = stats.inactive;
 
-  const details = Object.entries(stats.byCategory)
-    .map(
-      ([cat, count]) =>
-        `${getCategoryEmoji(cat)} ${CATEGORIES[cat]?.name}: ${count}`
-    )
-    .join(' | ');
+  const statsDetails = Object.entries(stats.byCategory)
+    .map(([key, value]) => {
+      const cat = CATEGORIES[key];
+      return `
+        <div class="stat-card">
+          <h4>${cat?.emoji} ${cat?.name}</h4>
+          <p>${value}</p>
+        </div>
+      `;
+    })
+    .join('');
 
-  document.getElementById('stats-details').textContent = details;
+  document.getElementById('stats-details').innerHTML = statsDetails;
 };
 
 // ============================================
 // EVENTOS
 // ============================================
 
+const getCurrentFilters = () => ({
+  status: document.getElementById('filter-status').value,
+  category: document.getElementById('filter-category').value,
+  priority: document.getElementById('filter-priority').value,
+  search: document.getElementById('search-input').value
+});
+
+const applyCurrentFilters = () =>
+  applyFilters(items, getCurrentFilters());
+
 const handleFormSubmit = e => {
   e.preventDefault();
 
-  const name = document.getElementById('item-name').value.trim();
-  const description = document.getElementById('item-description').value.trim();
-  const category = document.getElementById('item-category').value;
-  const priority = document.getElementById('item-priority').value;
+  const itemData = {
+    name: document.getElementById('item-name').value.trim(),
+    description: document.getElementById('item-description').value.trim(),
+    category: document.getElementById('item-category').value,
+    priority: document.getElementById('item-priority').value
+  };
 
-  if (!name) {
-    alert('El nombre del paciente es obligatorio');
-    return;
-  }
+  if (!itemData.name) return;
 
-  const itemData = { name, description, category, priority };
-
-  if (editingItemId) {
-    items = updateItem(editingItemId, itemData);
-  } else {
-    items = createItem(itemData);
-  }
+  items = editingItemId
+    ? updateItem(editingItemId, itemData)
+    : createItem(itemData);
 
   resetForm();
   renderItems(applyCurrentFilters());
   renderStats(getStats(items));
 };
 
-const handleItemToggle = id => {
-  items = toggleItemActive(id);
-
-  renderItems(applyCurrentFilters());
-  renderStats(getStats(items));
-};
-
-const handleItemEdit = id => {
-  const item = items.find(i => i.id === id);
-
-  if (!item) return;
-
-  document.getElementById('item-name').value = item.name;
-  document.getElementById('item-description').value = item.description;
-  document.getElementById('item-category').value = item.category;
-  document.getElementById('item-priority').value = item.priority;
-
-  document.getElementById('form-title').textContent = '✏️ Editar Cita';
-  document.getElementById('submit-btn').textContent = 'Actualizar';
-  document.getElementById('cancel-btn').style.display = 'inline-block';
-
-  editingItemId = id;
-};
-
-const handleItemDelete = id => {
-  if (!confirm('¿Eliminar esta cita?')) return;
-
-  items = deleteItem(id);
-
-  renderItems(applyCurrentFilters());
-  renderStats(getStats(items));
-};
-
-const getCurrentFilters = () => {
-  return {
-    status: document.getElementById('filter-status').value,
-    category: document.getElementById('filter-category').value,
-    priority: document.getElementById('filter-priority').value,
-    search: document.getElementById('search-input').value
-  };
-};
-
-const applyCurrentFilters = () => {
-  return applyFilters(items, getCurrentFilters());
-};
-
-const handleFilterChange = () => {
-  renderItems(applyCurrentFilters());
-};
-
 const resetForm = () => {
   document.getElementById('item-form').reset();
-
-  document.getElementById('form-title').textContent = '➕ Nueva Cita';
-  document.getElementById('submit-btn').textContent = 'Crear';
-  document.getElementById('cancel-btn').style.display = 'none';
-
   editingItemId = null;
 };
 
-// ============================================
-// LISTENERS
-// ============================================
-
 const attachEventListeners = () => {
-
   document.getElementById('item-form')
     .addEventListener('submit', handleFormSubmit);
 
   document.getElementById('cancel-btn')
     .addEventListener('click', resetForm);
 
-  ['filter-status','filter-category','filter-priority','search-input']
-    .forEach(id => {
-      document.getElementById(id)
-        .addEventListener('input', handleFilterChange);
-    });
-
   document.getElementById('clear-inactive')
     .addEventListener('click', () => {
-      if (confirm('Eliminar citas canceladas?')) {
-        items = clearInactive();
-        renderItems(applyCurrentFilters());
-        renderStats(getStats(items));
-      }
+      items = clearInactive();
+      renderItems(applyCurrentFilters());
+      renderStats(getStats(items));
     });
 
   document.getElementById('item-list')
     .addEventListener('click', e => {
-
       const itemEl = e.target.closest('.task-item');
       if (!itemEl) return;
 
-      const id = parseInt(itemEl.dataset.itemId);
+      const id = Number(itemEl.dataset.itemId);
 
-      if (e.target.classList.contains('task-checkbox')) {
-        handleItemToggle(id);
-      }
+      if (e.target.classList.contains('task-checkbox'))
+        items = toggleItemActive(id);
 
-      if (e.target.classList.contains('btn-edit')) {
-        handleItemEdit(id);
-      }
+      if (e.target.classList.contains('btn-delete'))
+        items = deleteItem(id);
 
-      if (e.target.classList.contains('btn-delete')) {
-        handleItemDelete(id);
-      }
+      renderItems(applyCurrentFilters());
+      renderStats(getStats(items));
     });
+
+  ['filter-status','filter-category','filter-priority','search-input']
+    .forEach(id =>
+      document.getElementById(id)
+        .addEventListener('input', () =>
+          renderItems(applyCurrentFilters())
+        )
+    );
 };
 
 // ============================================
@@ -399,14 +318,9 @@ const attachEventListeners = () => {
 
 const init = () => {
   items = loadItems();
-
   renderItems(items);
   renderStats(getStats(items));
-
   attachEventListeners();
-
-  console.log('✅ Sistema de Citas Médicas inicializado');
 };
 
 document.addEventListener('DOMContentLoaded', init);
-
