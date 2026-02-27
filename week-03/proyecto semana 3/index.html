@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🏥 Sistema de Gestión de Citas Médicas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="app-container">
+
+    <!-- HEADER -->
+    <header class="header">
+      <h1>🏥 Sistema de Gestión de Citas Médicas</h1>
+      <p class="subtitle">Administración y control de citas clínicas</p>
+    </header>
+
+    <!-- PESTAÑAS -->
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="catalog">📅 Citas</button>
+      <button class="tab-btn" data-tab="users">👥 Usuarios</button>
+      <button class="tab-btn" data-tab="transactions">📋 Historial</button>
+      <button class="tab-btn" data-tab="stats">📊 Estadísticas</button>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <main class="tab-content">
+
+      <!-- ================= CITAS ================= -->
+      <section id="catalog" class="tab-panel active">
+        <div class="panel-header">
+          <h2>📅 Citas Programadas</h2>
+
+          <div class="actions">
+            <button id="add-item-btn" class="btn btn-primary">
+              + Agregar Cita
+            </button>
+          </div>
+        </div>
+
+        <!-- FILTROS (FUERA DEL BOTÓN) -->
+        <div class="filters" style="margin:15px 0;">
+          <input type="text" id="search-input" placeholder="Buscar por nombre..." />
+          <select id="filter-type">
+            <option value="all">Todos los tipos</option>
+            <option value="GeneralAppointment">Consulta General</option>
+            <option value="SpecialistAppointment">Especialista</option>
+            <option value="EmergencyAppointment">Urgencia</option>
+          </select>
+        </div>
+
+        <div id="item-list" class="items-grid"></div>
+
+        <div id="empty-state" class="empty-state" style="display: none;">
+          <p>📭 No hay citas registradas</p>
+          <p class="hint">Agrega tu primera cita usando el botón superior</p>
+        </div>
+      </section>
+
+      <!-- ================= USUARIOS ================= -->
+      <section id="users" class="tab-panel">
+        <div class="panel-header">
+          <h2>👥 Usuarios del Sistema</h2>
+          <div class="actions">
+            <button id="add-user-btn" class="btn btn-primary">
+              + Agregar Usuario
+            </button>
+          </div>
+        </div>
+        <div id="user-list" class="users-grid"></div>
+      </section>
+
+      <!-- ================= HISTORIAL ================= -->
+      <section id="transactions" class="tab-panel">
+        <div class="panel-header">
+          <h2>📋 Historial de Citas</h2>
+        </div>
+        <div id="transaction-list" class="transactions-list"></div>
+      </section>
+
+      <!-- ================= ESTADÍSTICAS ================= -->
+      <section id="stats" class="tab-panel">
+        <div class="panel-header">
+          <h2>📊 Estadísticas del Sistema</h2>
+        </div>
+
+        <div id="stats-container" class="stats-grid">
+
+          <div class="stat-card">
+            <span class="stat-value" id="stat-total">0</span>
+            <span class="stat-label">Total Citas</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-value" id="stat-active">0</span>
+            <span class="stat-label">Activas</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-value" id="stat-inactive">0</span>
+            <span class="stat-label">Inactivas</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-value" id="stat-users">0</span>
+            <span class="stat-label">Usuarios</span>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= MODAL ================= -->
+    <div id="item-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Agregar Cita Médica</h3>
+          <button class="close-btn" id="close-modal">&times;</button>
+        </div>
+
+        <form id="appointment-form" class="modal-form">
+
+          <div class="form-group">
+            <label for="type">Tipo de Consulta</label>
+            <select id="type" required>
+              <option value="general">Consulta General</option>
+              <option value="specialist">Especialista</option>
+              <option value="emergency">Urgencia</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="patient">Nombre del Paciente *</label>
+            <input type="text" id="patient" required />
+          </div>
+
+          <div class="form-group">
+            <label for="date">Fecha *</label>
+            <input type="date" id="date" required />
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="starter/script.js"></script>
+</body>
+</html>
