@@ -1,69 +1,88 @@
-/*
- * script.js — Ficha de Presentación de Dominio
- * Dominio: Sistema de citas médicas online
- */
-
 // ============================================
-// ENCABEZADO — identifica el dominio y la entidad
+// PROYECTO SEMANA 02: Ficha de Datos del Dominio
+// Dominio: Sistema de citas médicas online
 // ============================================
 
-console.log('=========================================');
-console.log(' SISTEMA DE CITAS MÉDICAS - FICHA #001 ');
-console.log('=========================================');
-console.log('');
-
 // ============================================
-// INFORMACIÓN GENERAL
+// SECCIÓN 1: DATOS PRINCIPALES
 // ============================================
 
-// Datos básicos de la cita médica registrada
-console.log('INFORMACIÓN GENERAL');
-console.log('--------------------');
+// Nombre del dominio
+const DOMAIN_NAME = "Sistema de citas médicas online";
 
-console.log('Nombre:          Consulta Medicina General');
-console.log('Código:          CITA-101');
-console.log('Categoría:       Consulta médica presencial');
-console.log('Estado:          Confirmada');
+// Nombre del elemento principal del sistema
+const itemName = "Consulta Medicina General";
 
-console.log('');
+// Categoría o tipo de cita médica
+const itemCategory = "Consulta médica presencial";
 
-// ============================================
-// DETALLES — datos numéricos y booleanos
-// ============================================
+// Número relevante del dominio (precio de la consulta)
+const itemQuantity = 50_000;
 
-// Información específica de la cita
-console.log('DETALLES');
-console.log('--------------------');
+// Boolean con prefijo semántico
+const isItemAvailable = true;
 
-console.log('Valor principal:    ', 50000);
+// Valor null que indica algo no asignado aún
+const assignedDoctor = null;
 
-// Cálculo automático del valor con descuento del 20%
-console.log('Valor calculado:    ', 50000 * 0.8);
-
-console.log('Estado booleano 1:  ', true);
-console.log('Estado booleano 2:  ', false);
-
-console.log('');
 
 // ============================================
-// RESUMEN DEL DOMINIO
+// SECCIÓN 2: MOSTRAR FICHA DE DATOS
 // ============================================
+console.log("===========================");
+console.log(`FICHA DE DATOS: ${DOMAIN_NAME}`);
+console.log("===========================");
+console.log("");
 
-// Información general del sistema de citas
-console.log('RESUMEN DEL DOMINIO');
-console.log('--------------------');
+console.log(`Nombre:     ${itemName}`);
+console.log(`Categoría:  ${itemCategory}`);
+console.log(`Precio:     ${itemQuantity}`);
+console.log(`Disponible: ${isItemAvailable}`);
 
-console.log('Dominio:          Sistema de citas médicas online');
-console.log('Entidad:          Cita médica');
-console.log('Total registros:  ', 120);
+console.log("");
 
-console.log('');
+
+// ============================================
+// SECCIÓN 3: VERIFICACIÓN DE TIPOS CON typeof
+// ============================================
+console.log("--- Tipos de datos ---");
+
+console.log("typeof itemName:        ", typeof itemName);
+console.log("typeof itemQuantity:    ", typeof itemQuantity);
+console.log("typeof isItemAvailable: ", typeof isItemAvailable);
+
+console.log("");
+
+
+// ============================================
+// SECCIÓN 4: CONVERSIONES EXPLÍCITAS
+// ============================================
+console.log("--- Conversiones ---");
+
+// Convertir número a texto
+const priceAsText = String(itemQuantity);
+
+console.log("Precio como texto:", priceAsText);
+console.log("typeof precio convertido:", typeof priceAsText);
+
+console.log("");
+
+
+// ============================================
+// SECCIÓN 5: VALOR NULL
+// ============================================
+console.log("--- Valor nulo ---");
+
+console.log("Doctor asignado:", assignedDoctor);
+console.log("typeof doctor:", typeof assignedDoctor);
+console.log("¿Es null?:", assignedDoctor === null);
+
+console.log("");
+
 
 // ============================================
 // CIERRE
 // ============================================
-
-console.log('=========================================');
-console.log('  Gestión de citas médicas con JavaScript');
-console.log('=========================================');
-
+console.log("===========================");
+console.log("FIN DE FICHA");
+console.log("===========================");
